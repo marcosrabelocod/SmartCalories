@@ -1,0 +1,5 @@
+{
+  "name": "TCC",
+  "description": "A smart calorie tracking application with a dynamic progress header and AI food analysis.",
+  "requestFramePermissions": []
+}

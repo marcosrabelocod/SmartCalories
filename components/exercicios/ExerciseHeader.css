@@ -1,0 +1,130 @@
+.ex-header-container {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  width: 100%;
+  background-color: rgba(15, 23, 42, 0.95);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 10px 30px -10px rgba(249, 115, 22, 0.15); /* Orange glow */
+  animation: slideDown 0.3s ease-out;
+}
+
+.ex-header-content {
+  max-width: 28rem;
+  margin: 0 auto;
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.ex-top-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.ex-icon-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.ex-icon-box {
+  padding: 0.5rem;
+  background: linear-gradient(to bottom right, #f97316, #ea580c); /* Orange gradient */
+  border-radius: 0.75rem;
+  box-shadow: 0 0 15px rgba(249, 115, 22, 0.4);
+  animation: pulse 2s infinite;
+}
+
+.ex-title {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: white;
+  letter-spacing: -0.02em;
+}
+
+.ex-settings-btn {
+  color: #64748b;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.ex-settings-btn:hover {
+  color: white;
+  transform: rotate(45deg);
+}
+
+.ex-stats-row {
+  display: flex;
+  align-items: baseline;
+  gap: 0.25rem;
+  margin-top: 0.25rem;
+}
+
+.ex-current {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: white;
+}
+
+.ex-target {
+  font-size: 0.875rem;
+  color: #94a3b8;
+  font-weight: 500;
+}
+
+.ex-progress-bg {
+  position: relative;
+  height: 0.75rem;
+  width: 100%;
+  background-color: rgba(51, 65, 85, 0.4);
+  border-radius: 9999px;
+  overflow: hidden;
+  margin-top: 0.5rem;
+}
+
+.ex-progress-fill {
+  height: 100%;
+  background: linear-gradient(to right, #fb923c, #ef4444);
+  border-radius: 9999px;
+  position: relative;
+  transition: width 1s ease-out;
+  box-shadow: 0 0 12px rgba(249, 115, 22, 0.5);
+}
+
+.ex-shine {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  transform: skewX(-20deg);
+  animation: shine 2s infinite;
+}
+
+@keyframes shine {
+  0% { transform: translateX(-100%) skewX(-20deg); }
+  100% { transform: translateX(200%) skewX(-20deg); }
+}
+
+@keyframes slideDown {
+  from { transform: translateY(-100%); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(249, 115, 22, 0.4); }
+  70% { box-shadow: 0 0 0 6px rgba(249, 115, 22, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(249, 115, 22, 0); }
+}

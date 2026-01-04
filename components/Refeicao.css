@@ -1,0 +1,276 @@
+
+.refeicao-wrapper {
+  display: flex;
+  align-items: stretch;
+  position: relative;
+  min-height: 5rem;
+  
+  /* Animation for entry */
+  animation: slideEnter 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+  overflow: visible; 
+  transform-origin: top left;
+}
+
+/* Animação de Entrada */
+@keyframes slideEnter {
+  0% {
+    opacity: 0;
+    transform: translateX(-40px);
+    max-height: 0;
+    min-height: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+    max-height: 12rem; /* Sufficient height for the card */
+    min-height: 5rem;
+  }
+}
+
+/* Animação de Saída (Exclusão) */
+.slide-exit {
+  animation: slideExit 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  pointer-events: none; /* Impede cliques durante a saída */
+}
+
+@keyframes slideExit {
+  0% {
+    opacity: 1;
+    transform: translateX(0);
+    max-height: 12rem;
+    min-height: 5rem;
+    margin-bottom: 0;
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(100%); /* Vai para a direita */
+    max-height: 0;
+    min-height: 0;
+    margin-bottom: -0.5rem; /* Ajuda a colapsar o espaço */
+    padding: 0;
+  }
+}
+
+/* Timeline Graphic Logic */
+.timeline-graphic {
+  position: relative;
+  width: 2rem;
+  min-width: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.timeline-vertical-line {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 2px;
+  background-image: linear-gradient(to bottom, #64748b 50%, transparent 50%);
+  background-size: 2px 12px;
+  background-repeat: repeat-y;
+  transform: translateX(-50%);
+  opacity: 0.5;
+}
+
+.timeline-branch {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 50%;
+  height: 2px;
+  background-color: #64748b;
+  opacity: 0.5;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+}
+
+.timeline-dot {
+  width: 8px;
+  height: 8px;
+  background-color: var(--color-primary);
+  border-radius: 50%;
+  position: absolute;
+  left: -4px;
+  box-shadow: 0 0 8px var(--color-primary);
+}
+
+/* Card Styling */
+.refeicao-card {
+  flex: 1;
+  display: flex;
+  flex-direction: column; /* Changed to column for 2-row layout */
+  gap: 0.25rem;
+  background-color: var(--color-card);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 0.75rem;
+  padding: 0.75rem 1rem;
+  margin: 0.5rem 0;
+  transition: all 0.2s;
+  position: relative;
+  z-index: 1; /* Establish stacking context */
+}
+
+.refeicao-card:hover {
+  border-color: rgba(59, 130, 246, 0.3);
+  transform: translateX(4px);
+}
+
+.refeicao-card::before {
+  content: '';
+  position: absolute;
+  left: -6px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 0; 
+  height: 0; 
+  border-top: 6px solid transparent;
+  border-bottom: 6px solid transparent; 
+  border-right: 6px solid var(--color-card); 
+}
+
+/* New Layout Rows */
+.refeicao-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.25rem;
+}
+
+.refeicao-body-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.refeicao-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.refeicao-title {
+  font-weight: 600;
+  color: #e2e8f0;
+  font-size: 1rem;
+}
+
+/* Category Button Styling */
+.refeicao-category-btn {
+  font-size: 0.75rem;
+  color: #94a3b8; /* slate-400 */
+  text-transform: capitalize;
+  background: none;
+  border: none;
+  padding: 0.125rem 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  transition: color 0.2s;
+  margin-top: 0.125rem;
+}
+
+.refeicao-category-btn:hover {
+  color: var(--color-primary);
+}
+
+.category-chevron {
+  transition: transform 0.2s;
+}
+
+.refeicao-category-btn:hover .category-chevron {
+  transform: translateY(1px);
+}
+
+.refeicao-time-input {
+  font-size: 0.7rem;
+  color: #94a3b8;
+  background-color: rgba(15, 23, 42, 0.5);
+  padding: 0.1rem 0.4rem;
+  border-radius: 0.25rem;
+  border: none;
+  font-family: inherit;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.2s;
+}
+
+.refeicao-time-input:hover, .refeicao-time-input:focus {
+  background-color: rgba(15, 23, 42, 0.8);
+  color: white;
+}
+
+.refeicao-time-input::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+  opacity: 0.5;
+  width: 10px;
+  height: 10px;
+  cursor: pointer;
+}
+
+.refeicao-calories {
+  font-weight: 600;
+  color: var(--color-primary);
+  font-size: 0.75rem;
+  background-color: rgba(59, 130, 246, 0.1);
+  padding: 0.1rem 0.5rem;
+  border-radius: 9999px;
+}
+
+/* Actions Wrapper */
+.refeicao-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* General Button Styles - Minimalist/Initial Style */
+.refeicao-action-btn {
+  padding: 0.4rem;
+  background: none; /* No background */
+  border: none;     /* No border */
+  border-radius: 0.5rem;
+  transition: all 0.2s;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #94a3b8; /* Slate-400 (Gray) default */
+}
+
+.refeicao-action-btn:hover {
+  background-color: rgba(255, 255, 255, 0.05); /* Slight hover bg */
+  transform: translateY(-2px);
+}
+
+.refeicao-action-btn:active {
+  transform: translateY(0);
+}
+
+/* Ensure SVGs inherit color correctly */
+.refeicao-action-btn svg {
+  stroke: currentColor;
+  stroke-width: 2px;
+  transition: all 0.2s;
+  fill: none; /* Ensure no fill by default */
+}
+
+/* 1. Search Button Hover */
+.refeicao-action-btn.search-btn:hover {
+  color: var(--color-primary);
+}
+
+/* 2. Suggestion/Lightbulb Button Hover */
+.refeicao-action-btn.suggestion-btn:hover {
+  color: var(--color-warning);
+}
+
+/* 3. Delete Button Hover */
+.refeicao-action-btn.delete-food-btn:hover {
+  color: var(--color-danger);
+  background-color: rgba(239, 68, 68, 0.1);
+}

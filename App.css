@@ -1,0 +1,81 @@
+/* Global Variables based on the Tailwind Config */
+:root {
+  --color-dark: #0f172a;
+  --color-card: #1e293b;
+  --color-primary: #3b82f6;
+  --color-primary-hover: #2563eb;
+  --color-accent: #8b5cf6;
+  --color-success: #10b981;
+  --color-warning: #f59e0b;
+  --color-danger: #ef4444;
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8; /* slate-400 */
+  --text-dark: #64748b; /* slate-500 */
+}
+
+/* App Container */
+.app-container {
+  min-height: 100vh;
+  background-color: var(--color-dark);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-bottom: 7rem; /* pb-28 */
+  font-family: 'Inter', sans-serif;
+  color: var(--text-main);
+}
+
+.main-content {
+  width: 100%;
+  max-width: 28rem; /* max-w-md */
+  padding: 2rem 1.5rem; /* py-8 px-6 */
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+
+
+/* History Section */
+.history-section {
+  flex: 1;
+}
+
+.history-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  color: var(--text-muted);
+}
+
+.history-title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.empty-history {
+  text-align: center;
+  padding: 2.5rem 0;
+  color: #475569; /* slate-600 */
+  border: 1px dashed #1e293b; /* slate-800 */
+  border-radius: 0.75rem;
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}

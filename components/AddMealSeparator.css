@@ -1,0 +1,77 @@
+
+.separator-wrapper {
+  display: flex;
+  align-items: center;
+  min-height: 2rem; /* Compact height */
+  position: relative;
+  margin: -0.25rem 0; /* Slight negative margin to pull items closer */
+  
+  /* Animation */
+  animation: separatorEnter 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+  overflow: hidden;
+}
+
+@keyframes separatorEnter {
+  0% {
+    opacity: 0;
+    max-height: 0;
+    min-height: 0;
+    margin: 0;
+  }
+  100% {
+    opacity: 1;
+    max-height: 3rem;
+    min-height: 2rem;
+    margin: -0.25rem 0;
+  }
+}
+
+.separator-timeline {
+  width: 2rem;
+  min-width: 2rem;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.separator-line {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background-image: linear-gradient(to bottom, #64748b 50%, transparent 50%);
+  background-size: 2px 12px;
+  background-repeat: repeat-y;
+  opacity: 0.5;
+  z-index: 0;
+}
+
+.separator-btn {
+  z-index: 10;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  background-color: var(--color-dark);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: var(--color-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.separator-btn:hover {
+  background-color: var(--color-primary);
+  color: white;
+  transform: scale(1.1);
+  border-color: var(--color-primary);
+}
+
+.separator-spacer {
+  flex: 1;
+}

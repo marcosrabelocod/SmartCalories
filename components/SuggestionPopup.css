@@ -1,0 +1,210 @@
+.suggestion-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background-color: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 20vh;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.suggestion-card {
+  width: 90%;
+  max-width: 24rem;
+  background-color: var(--color-card);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  animation: slideDown 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.suggestion-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.25rem;
+}
+
+.suggestion-title-box {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: white;
+  font-weight: 600;
+  font-size: 1.125rem;
+}
+
+.text-warning-accent {
+  color: var(--color-warning);
+}
+
+.suggestion-close-btn {
+  color: #94a3b8;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.suggestion-close-btn:hover {
+  color: white;
+}
+
+/* Form Styles */
+.suggestion-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.suggestion-input {
+  width: 100%;
+  background-color: var(--color-dark);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0.75rem;
+  padding: 0.875rem 1rem;
+  padding-right: 3.5rem;
+  color: white;
+  outline: none;
+  transition: all 0.2s;
+  font-size: 1rem;
+}
+
+.suggestion-input:focus {
+  border-color: var(--color-warning);
+  box-shadow: 0 0 0 1px var(--color-warning);
+}
+
+.suggestion-input:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.suggestion-submit-btn {
+  position: absolute;
+  right: 0.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: var(--color-warning);
+  color: white;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.suggestion-submit-btn:hover:not(:disabled) {
+  background-color: #d97706; /* darker amber */
+}
+
+.suggestion-submit-btn:disabled {
+  background-color: #4b5563;
+  cursor: not-allowed;
+}
+
+.suggestion-error {
+  color: var(--color-danger);
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+}
+
+.suggestion-hint {
+  margin-top: 1rem;
+  font-size: 0.75rem;
+  color: #64748b;
+  text-align: center;
+}
+
+/* Result Confirmation Styles */
+.suggestion-result-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.suggestion-result-info {
+  text-align: center;
+}
+
+.result-food-name {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 0.25rem;
+  text-transform: capitalize;
+}
+
+.result-calories {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--color-warning);
+  background-color: rgba(245, 158, 11, 0.1);
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+}
+
+.suggestion-actions {
+  display: flex;
+  gap: 1rem;
+  width: 100%;
+  justify-content: center;
+}
+
+.action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.action-btn:active {
+  transform: scale(0.95);
+}
+
+.confirm-btn {
+  background-color: var(--color-success);
+  color: white;
+}
+
+.confirm-btn:hover {
+  background-color: #059669; /* darker emerald */
+  transform: scale(1.05);
+}
+
+.retry-btn {
+  background-color: transparent;
+  border: 2px solid var(--color-warning);
+  color: var(--color-warning);
+}
+
+.retry-btn:hover {
+  background-color: rgba(245, 158, 11, 0.1);
+  transform: rotate(15deg);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
