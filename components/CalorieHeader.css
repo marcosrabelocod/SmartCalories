@@ -3,15 +3,15 @@
   top: 0;
   z-index: 50;
   width: 100%;
-  background-color: rgba(15, 23, 42, 0.95); /* brand-dark/95 */
+  background-color: rgba(248, 250, 252, 0.95); /* brand-dark/95 */
   backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
   transition: all 0.3s;
 }
 
 .header-content {
-  max-width: 28rem;
+  width: 100%;
   margin: 0 auto;
   padding: 1.25rem 1.5rem;
   display: flex;

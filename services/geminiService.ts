@@ -1,15 +1,14 @@
+
 import { GoogleGenAI, Type } from "@google/genai";
 import { FoodAnalysisResult, ExerciseItem } from "../types";
 import { useUser } from "../IaFunctions/UserContext";
+import { useTokens } from "../IaFunctions/TokenContext";
 
-// Initialize AI instance outside the hook to avoid recreating it
 const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
-// Helper to handle potential Markdown code blocks in response
 const cleanJsonString = (text: string): string => {
   if (!text) return "{}";
   let cleaned = text.trim();
-  // Remove markdown code blocks if present
   if (cleaned.startsWith("```json")) {
     cleaned = cleaned.replace(/^```json\s*/, "").replace(/\s*```$/, "");
   } else if (cleaned.startsWith("```")) {
@@ -20,134 +19,71 @@ const cleanJsonString = (text: string): string => {
 
 export const useGemini = () => {
   const { userData } = useUser();
+  const { addTokens } = useTokens();
+
+  const trackUsage = (metadata: any) => {
+    if (metadata) {
+      addTokens(metadata.promptTokenCount || 0, metadata.candidatesTokenCount || 0);
+    }
+  };
 
   const analyzeFoodText = async (text: string): Promise<FoodAnalysisResult | null> => {
     try {
       const userContextString = JSON.stringify(userData);
-      
       const response = await ai.models.generateContent({
-        model: "gemini-2.5-flash",
+        model: "gemini-3-flash-preview",
         contents: `Analyze the following text and determine if it describes food. If it does, estimate the calories. Input: "${text}"
-        
-        User Data & Context:
-        ${userContextString}
-        
-        Instructions:
-        1. If the input is specific (e.g. "1 apple"), ignore the user context and analyze normally.
-        2. If the input is vague or refers to a habit (e.g. "my usual snack", "pre-workout"), use the "registro_consumo_recente" or "engenharia_nutricional" data to infer the food item.
-        3. Return valid JSON matching the schema.`,
+        User Data & Context: ${userContextString}
+        Instructions: Return valid JSON matching the schema.`,
         config: {
           responseMimeType: "application/json",
           responseSchema: {
             type: Type.OBJECT,
             properties: {
-              foodName: { 
-                type: Type.STRING,
-                description: "A concise name of the food item identified."
-              },
-              calories: { 
-                type: Type.NUMBER, 
-                description: "Estimated total calories for the described portion."
-              },
-              isFood: {
-                type: Type.BOOLEAN,
-                description: "True if the text describes edible food/drink."
-              },
-              confidence: {
-                type: Type.NUMBER,
-                description: "Confidence score between 0 and 1."
-              }
+              foodName: { type: Type.STRING },
+              calories: { type: Type.NUMBER },
+              isFood: { type: Type.BOOLEAN },
+              confidence: { type: Type.NUMBER }
             },
             required: ["foodName", "calories", "isFood"]
           }
         }
       });
-
-      const cleanText = cleanJsonString(response.text || "{}");
-      const result = JSON.parse(cleanText);
-
-      if (!result.isFood) {
-        return null;
-      }
-
-      return {
-        foodName: result.foodName,
-        calories: result.calories,
-        confidence: result.confidence || 0.8
-      };
-
-    } catch (error) {
-      console.error("Error analyzing food with Gemini:", error);
-      return null;
-    }
+      trackUsage(response.usageMetadata);
+      const result = JSON.parse(cleanJsonString(response.text || "{}"));
+      if (!result.isFood) return null;
+      return { foodName: result.foodName, calories: result.calories, confidence: result.confidence || 0.8 };
+    } catch (error) { return null; }
   };
 
-  const suggestFoodFromIngredients = async (ingredients: string, mealType: string, remainingCalories: number): Promise<FoodAnalysisResult | null> => {
+  const generateShoppingList = async (budget: number, duration: string, goal: string, pantryItems: any[] = []) => {
     try {
       const userContextString = JSON.stringify(userData);
-
+      const pantryString = pantryItems.map(i => `${i.name} (${i.quantity} ${i.unit})`).join(", ");
+      
       const response = await ai.models.generateContent({
-        model: "gemini-2.5-flash",
-        contents: `I have these ingredients: "${ingredients}". Suggest a single creative dish suitable for "${mealType}". 
-        I have ${remainingCalories} calories left for the day.
+        model: "gemini-3-pro-preview",
+        contents: `Como um Nutricionista IA e Personal Shopper, crie uma lista de compras otimizada.
         
-        User Data & Nutritional Engineering Profile:
-        ${userContextString}
+        CONTEXTO DO USUÁRIO:
+        - Objetivo: ${goal}
+        - Perfil: ${userContextString}
+        - Comorbidades/Restrições: ${userData.saude.comorbidades.join(", ") || "Nenhuma"}
         
-        Instructions:
-        1. Consider the user's "TipoFisico" (${userData.atributos.TipoFisico}) and "objetivo_obra".
-        2. Prioritize "materiais_preferenciais" if they align with the ingredients provided.
-        3. Ensure the suggestion fits the "estrategia" (e.g., avoiding catabolism).
-        4. Return the name of the dish and estimated calories.`,
-        config: {
-          responseMimeType: "application/json",
-          responseSchema: {
-            type: Type.OBJECT,
-            properties: {
-              foodName: { 
-                type: Type.STRING,
-                description: "The name of the suggested dish."
-              },
-              calories: { 
-                type: Type.NUMBER, 
-                description: "Estimated calories for a standard serving."
-              }
-            },
-            required: ["foodName", "calories"]
-          }
-        }
-      });
-
-      const cleanText = cleanJsonString(response.text || "{}");
-      const result = JSON.parse(cleanText);
-
-      return {
-        foodName: result.foodName,
-        calories: result.calories,
-        confidence: 1
-      };
-
-    } catch (error) {
-      console.error("Error suggesting food with Gemini:", error);
-      return null;
-    }
-  };
-
-  const generateWorkoutPlan = async (goal: string, focus: string): Promise<ExerciseItem[]> => {
-    try {
-      const response = await ai.models.generateContent({
-        model: "gemini-2.5-flash",
-        contents: `Crie uma rotina de treino personalizada em PORTUGUÊS DO BRASIL.
-        Objetivo: ${goal}. 
-        Foco do Treino: ${focus}.
-        Atributos do Usuário: Peso ${userData.atributos.Peso}kg, Tipo Físico ${userData.atributos.TipoFisico}.
-
-        Instruções obrigatórias:
-        1. Todos os campos de texto DEVEM estar em Português do Brasil.
-        2. O campo 'instructions' deve ser uma explicação passo a passo de como realizar o exercício.
-        3. O campo 'purpose' deve descrever qual músculo é trabalhado ou qual o benefício principal.
+        INVENTÁRIO ATUAL (DESPENSA):
+        - Itens já disponíveis: ${pantryString || "Vazia"}
         
-        Retorne uma lista JSON de 4 a 6 exercícios.`,
+        REQUISITO DA COMPRA:
+        - Duração/Tipo: ${duration}
+        - Orçamento Máximo: R$ ${budget}
+
+        DIRETRIZES CRÍTICAS:
+        1. PRIORIDADE: Se a compra for para uma refeição específica, escolha uma receita que utilize o máximo de itens já presentes na DESPENSA para economizar o orçamento.
+        2. RESTRIÇÕES: Não inclua itens que agravem as comorbidades do usuário (ex: se tiver intolerância a lactose, sugira alternativas sem lactose).
+        3. FOCO: Mantenha a dieta alinhada ao objetivo de ${goal}.
+        4. OBTENÇÃO: Liste apenas o que precisa ser COMPRADO para completar o plano, não liste o que já está na despensa.
+        
+        Retorne um array JSON.`,
         config: {
           responseMimeType: "application/json",
           responseSchema: {
@@ -155,71 +91,152 @@ export const useGemini = () => {
             items: {
               type: Type.OBJECT,
               properties: {
-                name: { type: Type.STRING, description: "Nome do exercício em Português" },
-                series: { type: Type.INTEGER, description: "Quantidade de séries" },
-                reps: { type: Type.STRING, description: "Repetições (ex: '12 a 15' ou '30 seg')" },
-                instructions: { type: Type.STRING, description: "Instruções detalhadas de como fazer o exercício" },
-                purpose: { type: Type.STRING, description: "Para que serve este exercício / Músculo alvo" },
-                caloriesEstimate: { type: Type.INTEGER, description: "Estimativa de calorias gastas" }
+                name: { type: Type.STRING },
+                quantity: { type: Type.NUMBER },
+                unit: { type: Type.STRING }
+              },
+              required: ["name", "quantity", "unit"]
+            }
+          }
+        }
+      });
+
+      trackUsage(response.usageMetadata);
+      return JSON.parse(cleanJsonString(response.text || "[]"));
+    } catch (error) {
+      console.error("Error generating shopping list:", error);
+      return [];
+    }
+  };
+
+  const suggestFoodFromIngredients = async (preference: string, mealType: string, remainingCalories: number, pantryItems: any[] = []): Promise<FoodAnalysisResult | null> => {
+    try {
+      const pantryString = pantryItems.map(i => `${i.name} (${i.quantity} ${i.unit})`).join(", ");
+      const userContextString = JSON.stringify(userData.atributos);
+      const comorbidades = userData.saude.comorbidades.join(", ") || "Nenhuma";
+      
+      const prompt = `Você é um Chef Nutricionista IA. Sugira um prato para o ${mealType}.
+      
+      DADOS DO USUÁRIO:
+      - Perfil Físico: ${userContextString}
+      - Comorbidades/Alergias: ${comorbidades}
+      
+      CONTEXTO DA REFEIÇÃO:
+      - Itens na Despensa: ${pantryString || "Nenhum item registrado"}
+      - Calorias Restantes na Meta: ${remainingCalories} kcal
+      - Preferência do Usuário: ${preference || "Nenhuma (escolha o melhor com base na despensa)"}
+      
+      REGRAS:
+      1. Priorize usar ingredientes que o usuário já tem na despensa.
+      2. NUNCA sugira algo que contenha ingredientes das comorbidades citadas.
+      3. Tente se aproximar das calorias restantes, considerando o perfil físico (idade, gênero, peso, altura).
+      
+      Retorne JSON com foodName e calories.`;
+
+      const response = await ai.models.generateContent({
+        model: "gemini-3-flash-preview",
+        contents: prompt,
+        config: {
+          responseMimeType: "application/json",
+          responseSchema: {
+            type: Type.OBJECT,
+            properties: {
+              foodName: { type: Type.STRING },
+              calories: { type: Type.NUMBER }
+            },
+            required: ["foodName", "calories"]
+          }
+        }
+      });
+      trackUsage(response.usageMetadata);
+      return JSON.parse(cleanJsonString(response.text || "{}"));
+    } catch (error) { return null; }
+  };
+
+  const generateWorkoutPlan = async (goal: string, focus: string): Promise<ExerciseItem[]> => {
+    try {
+      const userContextString = JSON.stringify(userData.atributos);
+      const comorbidades = userData.saude.comorbidades.join(", ") || "Nenhuma";
+      
+      const response = await ai.models.generateContent({
+        model: "gemini-3-pro-preview",
+        contents: `Como um Personal Trainer IA, crie um plano de treino personalizado.
+        
+        PERFIL DO USUÁRIO:
+        - Dados Físicos: ${userContextString}
+        - Condições de Saúde: ${comorbidades}
+        
+        OBJETIVOS:
+        - Objetivo Geral: ${goal}
+        - Foco do Treino: ${focus}
+        
+        INSTRUÇÕES:
+        Crie um plano de exercícios seguro e eficaz considerando a idade, gênero e peso do usuário.`,
+        config: {
+          responseMimeType: "application/json",
+          responseSchema: {
+            type: Type.ARRAY,
+            items: {
+              type: Type.OBJECT,
+              properties: {
+                name: { type: Type.STRING },
+                series: { type: Type.INTEGER },
+                reps: { type: Type.STRING },
+                instructions: { type: Type.STRING },
+                purpose: { type: Type.STRING },
+                caloriesEstimate: { type: Type.INTEGER }
               },
               required: ["name", "series", "reps", "instructions", "purpose", "caloriesEstimate"]
             }
           }
         }
       });
-
-      const cleanText = cleanJsonString(response.text || "[]");
-      const result = JSON.parse(cleanText);
-      
-      return result.map((item: any) => ({
-        ...item,
-        id: crypto.randomUUID(),
-        completed: false
-      }));
-
-    } catch (error) {
-      console.error("Error generating workout:", error);
-      return [];
-    }
+      trackUsage(response.usageMetadata);
+      const result = JSON.parse(cleanJsonString(response.text || "[]"));
+      return result.map((item: any) => ({ ...item, id: crypto.randomUUID(), completed: false }));
+    } catch (error) { return []; }
   };
 
   const suggestReplacementExercise = async (currentExerciseName: string, goal: string, focus: string): Promise<ExerciseItem | null> => {
     try {
+      const userContextString = JSON.stringify(userData.atributos);
+      const comorbidades = userData.saude.comorbidades.join(", ") || "Nenhuma";
+
       const response = await ai.models.generateContent({
-        model: "gemini-2.5-flash",
-        contents: `Sugira um exercício substituto para "${currentExerciseName}" em PORTUGUÊS DO BRASIL.
-        O novo exercício deve manter o objetivo de: ${goal} e o foco em: ${focus}.
-        Retorne as informações completas em JSON, com todos os textos em Português.`,
+        model: "gemini-3-pro-preview",
+        contents: `Como um Personal Trainer IA, sugira um exercício substituto para "${currentExerciseName}".
+        
+        PERFIL DO USUÁRIO:
+        - Dados Físicos: ${userContextString}
+        - Condições de Saúde: ${comorbidades}
+        
+        OBJETIVOS:
+        - Objetivo Geral: ${goal}
+        - Foco do Treino: ${focus}
+        
+        INSTRUÇÕES:
+        O substituto deve ser adequado para a idade, gênero e peso do usuário, mantendo o foco em ${focus}.`,
         config: {
           responseMimeType: "application/json",
           responseSchema: {
             type: Type.OBJECT,
             properties: {
-              name: { type: Type.STRING, description: "Nome do exercício substituto" },
+              name: { type: Type.STRING },
               series: { type: Type.INTEGER },
               reps: { type: Type.STRING },
-              instructions: { type: Type.STRING, description: "Como fazer" },
-              purpose: { type: Type.STRING, description: "Para que serve" },
+              instructions: { type: Type.STRING },
+              purpose: { type: Type.STRING },
               caloriesEstimate: { type: Type.INTEGER }
             },
             required: ["name", "series", "reps", "instructions", "purpose", "caloriesEstimate"]
           }
         }
       });
-
-      const cleanText = cleanJsonString(response.text || "{}");
-      const result = JSON.parse(cleanText);
-
-      return {
-        ...result,
-        id: crypto.randomUUID(),
-        completed: false
-      };
-    } catch (error) {
-      console.error("Error replacing exercise:", error);
-      return null;
-    }
+      trackUsage(response.usageMetadata);
+      const result = JSON.parse(cleanJsonString(response.text || "{}"));
+      return { ...result, id: crypto.randomUUID(), completed: false };
+    } catch (error) { return null; }
   };
 
-  return { analyzeFoodText, suggestFoodFromIngredients, generateWorkoutPlan, suggestReplacementExercise };
+  return { analyzeFoodText, suggestFoodFromIngredients, generateWorkoutPlan, suggestReplacementExercise, generateShoppingList };
 };

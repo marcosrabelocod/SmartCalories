@@ -12,18 +12,19 @@ const AddMealSeparator: React.FC<Props> = ({ onClick }) => {
       {/* Timeline Graphic Column */}
       <div className="separator-timeline">
         <div className="separator-line"></div>
-        <button 
-          onClick={onClick}
-          className="separator-btn"
-          aria-label="Adicionar lanche"
-          title="Adicionar Lanche"
-        >
-          <Plus size={14} strokeWidth={3} />
-        </button>
       </div>
       
-      {/* Empty space to match the card layout to the right */}
-      <div className="separator-spacer"></div>
+      {/* Button Section */}
+      <div className="separator-content">
+        <button 
+          onClick={onClick}
+          className="separator-btn-highlighted"
+          aria-label="Adicionar refeição"
+        >
+          <Plus size={18} strokeWidth={3} />
+          <span>adicionar refeição</span>
+        </button>
+      </div>
     </div>
   );
 };

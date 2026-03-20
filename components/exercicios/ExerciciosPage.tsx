@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useExercise } from '../../IaFunctions/ExerciseContext';
 import { useGemini } from '../../services/geminiService';
+import { useToast } from '../../IaFunctions/ToastContext';
 import ExerciseOnboarding from './ExerciseOnboarding';
 import ExerciseHeader from './ExerciseHeader';
 import ExerciseCard from './ExerciseCard';
@@ -14,6 +15,7 @@ const ExerciciosPage: React.FC = () => {
     setWorkoutPlan, 
     markExerciseComplete, 
     replaceExerciseInPlan,
+    resetSetup,
     goal,
     focus
   } = useExercise();

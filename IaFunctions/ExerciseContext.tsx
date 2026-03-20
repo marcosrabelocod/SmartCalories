@@ -23,8 +23,6 @@ interface ExerciseContextType {
 
 const ExerciseContext = createContext<ExerciseContextType | undefined>(undefined);
 
-const STORAGE_KEY = 'smartcal_exercise_data';
-
 export const ExerciseProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [isSetup, setIsSetup] = useState(false);
   const [goal, setGoal] = useState<ExerciseGoal>(null);
@@ -33,24 +31,7 @@ export const ExerciseProvider: React.FC<{ children: ReactNode }> = ({ children }
   const [targetBurn, setTargetBurn] = useState(500);
   const [workoutPlan, setWorkoutPlanState] = useState<ExerciseItem[]>([]);
 
-  useEffect(() => {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    if (stored) {
-      const data = JSON.parse(stored);
-      setIsSetup(data.isSetup || false);
-      setGoal(data.goal || null);
-      setFocus(data.focus || null);
-      setBurnedCalories(data.burnedCalories || 0);
-      setTargetBurn(data.targetBurn || 500);
-      setWorkoutPlanState(data.workoutPlan || []);
-    }
-  }, []);
-
-  useEffect(() => {
-    const data = { isSetup, goal, focus, burnedCalories, targetBurn, workoutPlan };
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-  }, [isSetup, goal, focus, burnedCalories, targetBurn, workoutPlan]);
-
+  // Lógica de definição da meta calórica baseada no objetivo selecionado
   useEffect(() => {
     if (goal === 'perder_peso') setTargetBurn(800);
     else if (goal === 'ganhar_massa') setTargetBurn(400);

@@ -15,10 +15,10 @@
   width: 100%;
   max-width: 20rem;
   background-color: var(--color-card);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(0, 0, 0, 0.05);
   border-radius: 1rem;
   padding: 1.25rem;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
   animation: zoomIn 0.2s ease-out;
 }
 
@@ -28,17 +28,17 @@
   justify-content: space-between;
   margin-bottom: 1rem;
   padding-bottom: 0.75rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 .category-modal-title {
-  font-size: 1rem;
+  font-size: 1.25rem;
   font-weight: 600;
-  color: white;
+  color: var(--text-main);
 }
 
 .category-modal-close {
-  color: #94a3b8;
+  color: #64748b;
   background: none;
   border: none;
   cursor: pointer;
@@ -46,7 +46,7 @@
 }
 
 .category-modal-close:hover {
-  color: white;
+  color: var(--text-main);
 }
 
 .category-list {
@@ -60,22 +60,22 @@
   align-items: center;
   justify-content: space-between;
   padding: 0.75rem;
-  background-color: rgba(255, 255, 255, 0.02);
+  background-color: rgba(0, 0, 0, 0.02);
   border: 1px solid transparent;
   border-radius: 0.75rem;
   cursor: pointer;
   transition: all 0.2s;
-  color: #e2e8f0;
+  color: var(--text-main);
 }
 
 .category-option:hover {
-  background-color: rgba(255, 255, 255, 0.05);
+  background-color: rgba(0, 0, 0, 0.05);
 }
 
 .category-option.active {
   background-color: rgba(59, 130, 246, 0.1);
   border-color: rgba(59, 130, 246, 0.3);
-  color: white;
+  color: var(--color-primary);
 }
 
 .category-option-left {
@@ -96,7 +96,7 @@
 }
 
 .category-label {
-  font-size: 0.9rem;
+  font-size: 1.125rem;
   font-weight: 500;
 }
 

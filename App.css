@@ -1,33 +1,54 @@
 /* Global Variables based on the Tailwind Config */
 :root {
-  --color-dark: #0f172a;
-  --color-card: #1e293b;
+  --color-dark: #f8fafc;
+  --color-card: #ffffff;
   --color-primary: #3b82f6;
   --color-primary-hover: #2563eb;
   --color-accent: #8b5cf6;
   --color-success: #10b981;
   --color-warning: #f59e0b;
   --color-danger: #ef4444;
-  --text-main: #f8fafc;
-  --text-muted: #94a3b8; /* slate-400 */
-  --text-dark: #64748b; /* slate-500 */
+  --text-main: #0f172a;
+  --text-muted: #64748b; /* slate-500 */
+  --text-dark: #94a3b8; /* slate-400 */
+}
+
+/* Global Reset and Scroll Fix */
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  background-color: var(--color-dark);
+}
+
+#root {
+  min-height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 /* App Container */
 .app-container {
   min-height: 100vh;
+  min-height: 100dvh;
+  width: 100%;
   background-color: var(--color-dark);
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-bottom: 7rem; /* pb-28 */
+  padding-bottom: 7.5rem; /* Aumentado para garantir visibilidade acima do BottomNav no mobile */
   font-family: 'Inter', sans-serif;
   color: var(--text-main);
+  overflow-x: hidden;
 }
 
 .main-content {
   width: 100%;
-  max-width: 28rem; /* max-w-md */
   padding: 2rem 1.5rem; /* py-8 px-6 */
   flex: 1;
   display: flex;
@@ -51,7 +72,7 @@
 }
 
 .history-title {
-  font-size: 0.875rem;
+  font-size: 1rem;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;

@@ -34,6 +34,7 @@ const Refeicao: React.FC<RefeicaoProps> = ({
   const { openSuggestion } = useSuggestion();
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
+  const [isAddFoodPopupOpen, setIsAddFoodPopupOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
 
   // Calculate total calories for this meal
@@ -79,7 +80,7 @@ const Refeicao: React.FC<RefeicaoProps> = ({
 
   return (
     <>
-      <div className={`refeicao-wrapper ${isDeleting ? 'slide-exit' : ''}`}>
+      <div className={`refeicao-wrapper ${isDeleting ? 'slide-exit' : ''} ${isAddFoodPopupOpen ? 'z-50' : ''}`}>
         {/* Timeline Graphic Section */}
         <div className="timeline-graphic">
           <div className="timeline-vertical-line"></div>
@@ -96,62 +97,75 @@ const Refeicao: React.FC<RefeicaoProps> = ({
           
           {/* Top Row: Time (Left) & Calories (Right) */}
           <div className="refeicao-header-row">
-            <input 
-              type="time" 
-              className="refeicao-time-input"
-              value={timeString}
-              onChange={handleTimeInput}
-              onClick={(e) => e.stopPropagation()} // Prevent modal open
-              aria-label="Editar horário"
-            />
-            <span className="refeicao-calories">+{totalCalories} kcal</span>
-          </div>
-
-          {/* Bottom Row: Name/Summary (Left) & Actions (Right) */}
-          <div className="refeicao-body-row">
-            <div className="refeicao-info">
-              <span className={`refeicao-title ${foods.length === 0 ? 'text-slate-500 font-normal italic' : ''}`}>
-                {foodSummary}
-              </span>
+            <div className="refeicao-header-left">
+              <input 
+                type="time" 
+                className="refeicao-time-input"
+                value={timeString}
+                onChange={handleTimeInput}
+                onClick={(e) => e.stopPropagation()} // Prevent modal open
+                aria-label="Editar horário"
+              />
               
-              {/* Category Button (Triggers Modal) */}
+              {/* Category Button (Moved to Header) */}
               <button 
-                className="refeicao-category-btn"
+                className="refeicao-category-btn highlighted"
                 onClick={(e) => {
                     e.stopPropagation();
                     setIsCategoryModalOpen(true);
                 }}
               >
                 {categoria}
-                <ChevronDown size={12} className="category-chevron" />
+                <ChevronDown size={14} className="category-chevron" />
               </button>
+            </div>
+            <span className="refeicao-calories">+{totalCalories} kcal</span>
+          </div>
+
+          {/* Bottom Row: Name/Summary (Left) & Actions (Right) */}
+          <div className="refeicao-body-row">
+            <div className="refeicao-info">
+              <div 
+                className="refeicao-add-trigger"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setIsAddFoodPopupOpen(!isAddFoodPopupOpen);
+                }}
+              >
+                <span className={`refeicao-title ${foods.length === 0 ? 'text-slate-500 font-normal italic' : ''}`}>
+                  {foodSummary}
+                </span>
+                
+                {isAddFoodPopupOpen && (
+                  <div className="add-food-popup animate-pop-in">
+                    <button 
+                      className="popup-option"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        openSearch(id);
+                        setIsAddFoodPopupOpen(false);
+                      }}
+                    >
+                      <Search size={18} />
+                      <span>Adicionar refeição</span>
+                    </button>
+                    <button 
+                      className="popup-option"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        openSuggestion(id, categoria, remainingCalories);
+                        setIsAddFoodPopupOpen(false);
+                      }}
+                    >
+                      <Lightbulb size={18} />
+                      <span>Pensar refeição</span>
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
             
             <div className="refeicao-actions">
-              <button 
-                onClick={(e) => {
-                    e.stopPropagation();
-                    openSearch(id);
-                }}
-                className="refeicao-action-btn search-btn"
-                aria-label="Adicionar alimento"
-                title="Adicionar item"
-              >
-                <Search size={16} />
-              </button>
-
-              <button 
-                onClick={(e) => {
-                    e.stopPropagation();
-                    openSuggestion(id, categoria, remainingCalories);
-                }}
-                className="refeicao-action-btn suggestion-btn"
-                aria-label="Sugestão da IA"
-                title="Ver sugestão"
-              >
-                <Lightbulb size={16} />
-              </button>
-              
               <button 
                 onClick={handleDeleteClick}
                 className="refeicao-action-btn delete-food-btn"

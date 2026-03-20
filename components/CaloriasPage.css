@@ -1,0 +1,11 @@
+.history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+@media (max-width: 380px) {
+  .history-list {
+    gap: 0.15rem;
+  }
+}

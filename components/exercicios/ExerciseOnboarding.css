@@ -19,20 +19,20 @@
   height: 0.6rem;
   border-radius: 50%;
   background-color: var(--color-card);
-  border: 1px solid #475569;
+  border: 1px solid #cbd5e1;
   transition: all 0.3s;
 }
 
 .step-dot.active {
   background-color: var(--color-accent);
   border-color: var(--color-accent);
-  box-shadow: 0 0 10px rgba(139, 92, 246, 0.4);
+  box-shadow: 0 0 10px rgba(139, 92, 246, 0.2);
 }
 
 .step-line {
-  width: 2.5rem;
+  width: 1.5rem;
   height: 1px;
-  background-color: #475569;
+  background-color: #cbd5e1;
 }
 
 .onboarding-content {
@@ -52,13 +52,13 @@
 .step-title {
   font-size: 1.25rem;
   font-weight: 700;
-  color: white;
+  color: var(--text-main);
   margin-bottom: 0.35rem;
   text-align: center;
 }
 
 .step-subtitle {
-  color: #94a3b8;
+  color: #64748b;
   margin-bottom: 1.5rem;
   text-align: center;
   font-size: 0.85rem;
@@ -76,23 +76,24 @@
   align-items: center;
   gap: 1rem;
   background-color: var(--color-card);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.05);
   padding: 1.25rem 1rem;
   border-radius: 1rem;
   cursor: pointer;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   text-align: left;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 .selection-card:active {
   transform: scale(0.97);
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: rgba(0, 0, 0, 0.02);
 }
 
 .selection-card.selected {
   border-color: var(--color-accent);
-  background-color: rgba(139, 92, 246, 0.1);
-  box-shadow: 0 0 20px rgba(139, 92, 246, 0.1);
+  background-color: rgba(139, 92, 246, 0.05);
+  box-shadow: 0 0 20px rgba(139, 92, 246, 0.05);
 }
 
 .card-icon-box {
@@ -116,7 +117,7 @@
 .card-label {
   font-size: 1.05rem;
   font-weight: 600;
-  color: white;
+  color: var(--text-main);
 }
 
 .card-desc {
@@ -125,10 +126,96 @@
   margin-top: 0.1rem;
 }
 
+/* Review Styles (Step 3) */
+.review-container {
+  width: 100%;
+  background-color: var(--color-card);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  border-radius: 1.25rem;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.review-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.review-icon {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.review-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.review-label {
+  font-size: 0.7rem;
+  color: #64748b;
+  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+.review-value {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.review-footer-msg {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+  color: #94a3b8;
+  padding-top: 0.75rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.confirm-setup-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  background: linear-gradient(135deg, var(--color-accent), #6d28d9);
+  color: white;
+  border: none;
+  border-radius: 1rem;
+  padding: 1.125rem;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 10px 20px -5px rgba(139, 92, 246, 0.3);
+}
+
+.confirm-setup-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 15px 30px -5px rgba(139, 92, 246, 0.4);
+}
+
+.confirm-setup-btn:active {
+  transform: translateY(0);
+}
+
 .onboarding-footer-minimal {
   display: flex;
   justify-content: center;
-  margin-top: 2rem;
+  margin-top: 1rem;
   padding: 1rem 0;
 }
 
@@ -147,7 +234,7 @@
 }
 
 .nav-btn-back-only:hover {
-  color: white;
+  color: var(--text-main);
 }
 
 .animate-fade-in {
@@ -158,6 +245,10 @@
   animation: slideLeft 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
+.animate-scale-up-light {
+  animation: scaleUpLight 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
@@ -166,4 +257,9 @@
 @keyframes slideLeft {
   from { opacity: 0; transform: translateX(20px); }
   to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes scaleUpLight {
+  from { opacity: 0; transform: scale(0.98) translateY(5px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
 }

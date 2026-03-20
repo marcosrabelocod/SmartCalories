@@ -1,0 +1,152 @@
+
+.token-counter-container {
+  position: fixed;
+  left: 1rem;
+  bottom: 5.5rem; /* Acima da BottomNav */
+  z-index: 100;
+  background-color: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  border-radius: 0.75rem;
+  color: var(--text-main);
+  font-family: 'Inter', sans-serif;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  width: 200px;
+  overflow: hidden;
+}
+
+.token-counter-container.minimized {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.token-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.6rem 0.75rem;
+  background-color: rgba(0, 0, 0, 0.02);
+  cursor: pointer;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.token-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #94a3b8;
+}
+
+.minimize-toggle {
+  background: none;
+  border: none;
+  color: #64748b;
+  cursor: pointer;
+}
+
+.token-body {
+  padding: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.token-section-title {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: #64748b;
+  text-transform: uppercase;
+  margin-top: 0.25rem;
+}
+
+.token-stat-row {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 0.25rem;
+}
+
+.token-stat-mini {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  font-family: monospace;
+}
+
+.token-divider {
+  height: 1px;
+  background-color: rgba(0, 0, 0, 0.05);
+  margin: 0.25rem 0;
+}
+
+.token-stat {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.8rem;
+}
+
+.stat-label {
+  color: #94a3b8;
+}
+
+.stat-value {
+  font-weight: 700;
+  font-family: monospace;
+}
+
+.token-footer {
+  margin-top: 0.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.reset-token-btn {
+  font-size: 0.7rem;
+  color: #ef4444;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  text-decoration: underline;
+}
+
+.token-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.6rem;
+  background-color: rgba(139, 92, 246, 0.1);
+  color: #a78bfa;
+  padding: 0.15rem 0.4rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(139, 92, 246, 0.2);
+}
+
+.minimized-bubble {
+  font-size: 0.7rem;
+  font-weight: 800;
+  color: var(--color-accent);
+  font-family: monospace;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}

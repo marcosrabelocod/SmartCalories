@@ -2,7 +2,7 @@
   position: fixed;
   inset: 0;
   z-index: 100;
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: rgba(0, 0, 0, 0.4);
   backdrop-filter: blur(8px);
   display: flex;
   align-items: flex-start;
@@ -15,7 +15,7 @@
   width: 90%;
   max-width: 24rem;
   background-color: var(--color-card);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(0, 0, 0, 0.05);
   border-radius: 1rem;
   padding: 1.5rem;
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
@@ -38,9 +38,9 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  color: white;
+  color: var(--text-main);
   font-weight: 600;
-  font-size: 1.125rem;
+  font-size: 1.35rem;
 }
 
 .text-warning-accent {
@@ -48,7 +48,7 @@
 }
 
 .suggestion-close-btn {
-  color: #94a3b8;
+  color: #64748b;
   background: none;
   border: none;
   cursor: pointer;
@@ -56,7 +56,7 @@
 }
 
 .suggestion-close-btn:hover {
-  color: white;
+  color: var(--text-main);
 }
 
 /* Form Styles */
@@ -68,20 +68,21 @@
 
 .suggestion-input {
   width: 100%;
-  background-color: var(--color-dark);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background-color: rgba(0, 0, 0, 0.02);
+  border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 0.75rem;
-  padding: 0.875rem 1rem;
+  padding: 1rem 1.25rem;
   padding-right: 3.5rem;
-  color: white;
+  color: var(--text-main);
   outline: none;
   transition: all 0.2s;
-  font-size: 1rem;
+  font-size: 1.125rem;
 }
 
 .suggestion-input:focus {
   border-color: var(--color-warning);
-  box-shadow: 0 0 0 1px var(--color-warning);
+  background-color: #eaeaea;
+  box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.1);
 }
 
 .suggestion-input:disabled {
@@ -143,19 +144,19 @@
 }
 
 .result-food-name {
-  font-size: 1.5rem;
+  font-size: 1.75rem;
   font-weight: 700;
-  color: white;
+  color: var(--text-main);
   margin-bottom: 0.25rem;
   text-transform: capitalize;
 }
 
 .result-calories {
-  font-size: 1.125rem;
+  font-size: 1.25rem;
   font-weight: 600;
   color: var(--color-warning);
   background-color: rgba(245, 158, 11, 0.1);
-  padding: 0.25rem 0.75rem;
+  padding: 0.35rem 1rem;
   border-radius: 9999px;
 }
 

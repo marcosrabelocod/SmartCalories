@@ -16,9 +16,9 @@
   width: 100%;
   max-width: 24rem;
   background-color: var(--color-card);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(0, 0, 0, 0.05);
   border-radius: 1rem;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
   padding: 1.5rem;
   animation: zoomIn 0.2s ease-out;
   overflow: hidden; /* Prevent content from spilling out */
@@ -39,19 +39,19 @@
 
 .modal-icon-box {
   padding: 0.5rem;
-  background-color: rgba(59, 130, 246, 0.2); /* blue-500/20 */
+  background-color: rgba(59, 130, 246, 0.1); /* blue-500/10 */
   border-radius: 9999px;
-  color: #60a5fa; /* blue-400 */
+  color: var(--color-primary);
 }
 
 .modal-title {
-  font-size: 1.125rem;
+  font-size: 1.35rem;
   font-weight: bold;
-  color: white;
+  color: var(--text-main);
 }
 
 .modal-close-btn {
-  color: #94a3b8;
+  color: #64748b;
   background: none;
   border: none;
   cursor: pointer;
@@ -59,7 +59,7 @@
 }
 
 .modal-close-btn:hover {
-  color: white;
+  color: var(--text-main);
 }
 
 .modal-grid {
@@ -76,22 +76,22 @@
   justify-content: center;
   gap: 0.25rem;
   padding: 0.75rem 0;
-  background-color: var(--color-dark);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  background-color: rgba(0, 0, 0, 0.02);
+  border: 1px solid rgba(0, 0, 0, 0.05);
   border-radius: 0.75rem;
   transition: all 0.2s;
   cursor: pointer;
 }
 
 .quick-add-btn:hover {
-  background-color: rgba(59, 130, 246, 0.2);
-  border-color: rgba(59, 130, 246, 0.5);
+  background-color: rgba(59, 130, 246, 0.1);
+  border-color: rgba(59, 130, 246, 0.3);
 }
 
 .quick-add-value {
-  color: #60a5fa; /* blue-400 */
+  color: var(--color-primary);
   font-weight: bold;
-  font-size: 1.125rem;
+  font-size: 1.35rem;
   transition: transform 0.2s;
 }
 
@@ -100,14 +100,14 @@
 }
 
 .quick-add-unit {
-  font-size: 0.75rem;
+  font-size: 0.9rem;
   color: #64748b; /* slate-500 */
   text-transform: uppercase;
 }
 
 .custom-input-label {
   display: block;
-  font-size: 0.75rem;
+  font-size: 0.9rem;
   color: #94a3b8;
   margin-bottom: 0.5rem;
   margin-left: 0.25rem;
@@ -120,16 +120,17 @@
 }
 
 .custom-input {
-  width: 6rem; /* Fixed width for the input (smaller) */
+  width: 7rem; /* Fixed width for the input (slightly larger) */
   flex: none; /* Do not grow */
-  background-color: var(--color-dark);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background-color: rgba(0, 0, 0, 0.02);
+  border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 0.75rem;
   padding: 0.75rem 0.5rem;
-  color: white;
+  color: var(--text-main);
   outline: none;
   transition: all 0.2s;
   text-align: center; /* Center the number */
+  font-size: 1.125rem;
 }
 
 .custom-input:focus {
@@ -150,11 +151,12 @@
   color: white;
   padding: 0 1rem;
   border-radius: 0.75rem;
-  font-weight: 500;
+  font-weight: 600;
   transition: background-color 0.2s;
   border: none;
   cursor: pointer;
   white-space: nowrap;
+  font-size: 1.125rem;
 }
 
 .custom-submit-btn:hover:not(:disabled) {

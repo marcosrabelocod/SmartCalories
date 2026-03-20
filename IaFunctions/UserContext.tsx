@@ -1,19 +1,27 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useState, ReactNode } from 'react';
 import initialData from './Data/userData';
 
-// Define the shape of UserData based on the TS file structure
-type UserData = typeof initialData;
+type UserData = typeof initialData & {
+  atributos: {
+    genero: string;
+    dataNascimento: string;
+  };
+  saude: {
+    comorbidades: string[];
+  }
+};
 
 interface UserContextType {
   userData: UserData;
+  isSetupComplete: boolean;
+  setPhysicalData: (peso: string, altura: string, genero: string, dataNascimento: string, comorbidades: string[]) => void;
+  updateUserData: (newData: Partial<UserData>) => void;
+  resetUserSetup: () => void;
   addFoodToHistory: (foodName: string, uiCategory: string) => void;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
-const STORAGE_KEY = 'smartcal_user_data';
-
-// Mapping UI categories to JSON keys
 const CATEGORY_MAP: Record<string, string> = {
   'Café da Manhã': 'cafeDaManha',
   'Almoço': 'Almoço',
@@ -22,61 +30,62 @@ const CATEGORY_MAP: Record<string, string> = {
 };
 
 export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  // Initialize state from LocalStorage or default TS file
-  const [userData, setUserData] = useState<UserData>(() => {
-    try {
-      const stored = localStorage.getItem(STORAGE_KEY);
-      if (stored) {
-        return JSON.parse(stored);
-      }
-    } catch (e) {
-      console.error("Error reading from local storage", e);
-    }
-    return initialData;
+  const [isSetupComplete, setIsSetupComplete] = useState(false);
+  const [userData, setUserData] = useState<UserData>({
+    ...initialData,
+    atributos: {
+      ...initialData.atributos,
+      genero: '',
+      dataNascimento: ''
+    },
+    saude: { comorbidades: [] }
   });
 
-  // Persist to LocalStorage whenever userData changes
-  useEffect(() => {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(userData));
-    } catch (e) {
-      console.error("Error saving to local storage", e);
-    }
-  }, [userData]);
+  const setPhysicalData = (peso: string, altura: string, genero: string, dataNascimento: string, comorbidades: string[]) => {
+    setUserData(prev => ({
+      ...prev,
+      atributos: {
+        ...prev.atributos,
+        Peso: peso,
+        Altura: altura,
+        genero: genero,
+        dataNascimento: dataNascimento
+      },
+      saude: {
+        comorbidades: comorbidades
+      }
+    }));
+    setIsSetupComplete(true);
+  };
+
+  const updateUserData = (newData: Partial<UserData>) => {
+    setUserData(prev => ({
+      ...prev,
+      ...newData
+    }));
+  };
+
+  const resetUserSetup = () => {
+    setIsSetupComplete(false);
+  };
 
   const addFoodToHistory = (foodName: string, uiCategory: string) => {
     if (!foodName) return;
-
     const jsonKey = CATEGORY_MAP[uiCategory];
     
-    // Check if category exists in structure
-    // We use 'any' casting briefly here because dynamic key access on the specific UserData type can be tricky in TS without index signatures
-    const currentHistory = (userData.engenharia_nutricional.registro_consumo_recente as any)[jsonKey];
-
-    if (jsonKey && Array.isArray(currentHistory)) {
-      setUserData(prev => {
-        // Deep clone to avoid mutation
-        const newData = JSON.parse(JSON.stringify(prev));
-        const list = newData.engenharia_nutricional.registro_consumo_recente[jsonKey];
-
-        // Add to beginning
-        list.unshift(foodName);
-
-        // Cap at 30 items
-        if (list.length > 30) {
-          list.pop();
-        }
-
-        console.log(`[UserContext] Added "${foodName}" to "${jsonKey}". New count: ${list.length}`);
-        return newData;
-      });
-    } else {
-      console.warn(`Category mapping not found or invalid for: ${uiCategory}`);
-    }
+    setUserData(prev => {
+      const newData = JSON.parse(JSON.stringify(prev));
+      const history = newData.engenharia_nutricional.registro_consumo_recente;
+      if (jsonKey && history[jsonKey]) {
+        history[jsonKey].unshift(foodName);
+        if (history[jsonKey].length > 30) history[jsonKey].pop();
+      }
+      return newData;
+    });
   };
 
   return (
-    <UserContext.Provider value={{ userData, addFoodToHistory }}>
+    <UserContext.Provider value={{ userData, isSetupComplete, setPhysicalData, updateUserData, resetUserSetup, addFoodToHistory }}>
       {children}
     </UserContext.Provider>
   );

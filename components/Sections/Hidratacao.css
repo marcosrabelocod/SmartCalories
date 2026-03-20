@@ -19,7 +19,7 @@
 }
 
 .hydro-title {
-  font-size: 0.875rem;
+  font-size: 1.125rem;
   font-weight: bold;
   color: white;
   line-height: 1;
@@ -30,14 +30,14 @@
 }
 
 .hydro-current {
-  font-size: 1rem;
+  font-size: 1.25rem;
   font-weight: bold;
   color: white;
 }
 
 .hydro-total {
   color: #64748b; /* slate-500 */
-  font-size: 0.75rem;
+  font-size: 0.9rem;
 }
 
 .hydro-controls {

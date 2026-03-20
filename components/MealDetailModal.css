@@ -2,7 +2,7 @@
   position: fixed;
   inset: 0;
   z-index: 100;
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: rgba(0, 0, 0, 0.4);
   backdrop-filter: blur(4px);
   display: flex;
   align-items: center;
@@ -15,10 +15,10 @@
   width: 100%;
   max-width: 24rem;
   background-color: var(--color-card);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(0, 0, 0, 0.05);
   border-radius: 1rem;
   padding: 1.5rem;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
   animation: zoomIn 0.2s ease-out;
   display: flex;
   flex-direction: column;
@@ -31,20 +31,20 @@
   justify-content: space-between;
   margin-bottom: 1.25rem;
   padding-bottom: 0.75rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 .meal-modal-title-box {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  color: white;
+  color: var(--text-main);
   font-weight: 600;
-  font-size: 1.125rem;
+  font-size: 1.35rem;
 }
 
 .meal-modal-close {
-  color: #94a3b8;
+  color: #64748b;
   background: none;
   border: none;
   cursor: pointer;
@@ -52,7 +52,7 @@
 }
 
 .meal-modal-close:hover {
-  color: white;
+  color: var(--text-main);
 }
 
 .meal-modal-content {
@@ -78,17 +78,17 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  background-color: rgba(59, 130, 246, 0.15); /* Primary with opacity */
-  border: 1px solid rgba(59, 130, 246, 0.3);
-  padding: 0.35rem 0.5rem 0.35rem 0.75rem;
+  background-color: rgba(59, 130, 246, 0.1); /* Primary with opacity */
+  border: 1px solid rgba(59, 130, 246, 0.2);
+  padding: 0.5rem 0.75rem 0.5rem 1rem;
   border-radius: 9999px;
-  color: white;
-  font-size: 0.875rem;
+  color: var(--color-primary);
+  font-size: 1.125rem;
   transition: all 0.2s;
 }
 
 .food-tag:hover {
-  background-color: rgba(59, 130, 246, 0.25);
+  background-color: rgba(59, 130, 246, 0.2);
 }
 
 .food-tag-name {
@@ -97,8 +97,8 @@
 }
 
 .food-tag-cal {
-  font-size: 0.75rem;
-  color: #93c5fd; /* Light blue */
+  font-size: 0.9rem;
+  color: #2563eb; /* blue-600 */
 }
 
 .food-tag-remove {
@@ -108,8 +108,8 @@
   width: 1.25rem;
   height: 1.25rem;
   border-radius: 50%;
-  background-color: rgba(0, 0, 0, 0.2);
-  color: #cbd5e1;
+  background-color: rgba(0, 0, 0, 0.05);
+  color: #64748b;
   border: none;
   cursor: pointer;
   transition: all 0.2s;
@@ -126,18 +126,18 @@
     align-items: center;
     gap: 0.5rem;
     padding-top: 1rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 .total-label {
     color: #94a3b8;
-    font-size: 0.875rem;
+    font-size: 1.125rem;
 }
 
 .total-value {
     color: var(--color-primary);
     font-weight: bold;
-    font-size: 1.125rem;
+    font-size: 1.35rem;
 }
 
 @keyframes zoomIn {

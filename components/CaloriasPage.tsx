@@ -7,6 +7,7 @@ import SuggestionPopup from './SuggestionPopup';
 import { useUser } from '../IaFunctions/UserContext';
 import { FoodItem } from '../types';
 import { Utensils } from 'lucide-react';
+import './CaloriasPage.css';
 
 const INITIAL_CAL_TOTAL = 3000;
 
@@ -62,29 +63,20 @@ const CaloriasPage: React.FC = () => {
     setWaterCurrent(prev => Math.min(prev + amount, waterTotal + 1000));
   };
 
-  // Add a new sub-item to the meal
   const handleAddFoodFromSearch = (newItemData: { name: string, calories: number }, targetMealId: string) => {
-    // Find the item to get its category for history
     const targetItem = foodHistory.find(item => item.id === targetMealId);
-    
     if (targetItem) {
-      // Add to AI history via Context
       addFoodToHistory(newItemData.name, targetItem.category);
     }
 
     setFoodHistory(prev => prev.map(meal => {
       if (meal.id === targetMealId) {
-        // Create new sub-item
         const newSubItem = {
           id: crypto.randomUUID(),
           name: newItemData.name,
           calories: newItemData.calories
         };
-        
-        return {
-          ...meal,
-          foods: [...meal.foods, newSubItem] // Accumulate
-        };
+        return { ...meal, foods: [...meal.foods, newSubItem] };
       }
       return meal;
     }));
@@ -97,10 +89,7 @@ const CaloriasPage: React.FC = () => {
   const handleRemoveSubFood = useCallback((mealId: string, foodId: string) => {
     setFoodHistory(prev => prev.map(meal => {
       if (meal.id === mealId) {
-        return {
-          ...meal,
-          foods: meal.foods.filter(f => f.id !== foodId)
-        };
+        return { ...meal, foods: meal.foods.filter(f => f.id !== foodId) };
       }
       return meal;
     }));
@@ -108,32 +97,24 @@ const CaloriasPage: React.FC = () => {
 
   const handleTimeUpdate = useCallback((id: string, newTime: Date) => {
     setFoodHistory(prev => {
-      const updated = prev.map(item => 
-        item.id === id ? { ...item, timestamp: newTime } : item
-      );
-      // Re-sort chronologically to keep the timeline correct
+      const updated = prev.map(item => item.id === id ? { ...item, timestamp: newTime } : item);
       return updated.sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime());
     });
   }, []);
 
   const handleCategoryUpdate = useCallback((id: string, newCategory: string) => {
-    setFoodHistory(prev => prev.map(item => 
-      item.id === id ? { ...item, category: newCategory } : item
-    ));
+    setFoodHistory(prev => prev.map(item => item.id === id ? { ...item, category: newCategory } : item));
   }, []);
 
   const handleAddMealBlock = (index: number) => {
     const currentItem = foodHistory[index];
     const nextItem = foodHistory[index + 1];
-
     let newTime = new Date();
     
     if (nextItem) {
-      // Calculate midpoint between current and next meal
       const midTime = (currentItem.timestamp.getTime() + nextItem.timestamp.getTime()) / 2;
       newTime = new Date(midTime);
     } else {
-      // If it's the last item, add 2.5 hours to it
       newTime = new Date(currentItem.timestamp.getTime() + (2.5 * 60 * 60 * 1000));
     }
 
@@ -144,13 +125,11 @@ const CaloriasPage: React.FC = () => {
       timestamp: newTime
     };
 
-    // Add and Sort
     setFoodHistory(prev => [...prev, newMealBlock].sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime()));
   };
 
   return (
     <>
-      {/* 1. Header with Progress Bars (Calories + Water) */}
       <CalorieHeader 
         caloriesCurrent={currentCalories} 
         caloriesTotal={totalCalories}
@@ -160,8 +139,6 @@ const CaloriasPage: React.FC = () => {
       />
 
       <main className="main-content">
-        
-        {/* History Section (Timeline) */}
         <section className="history-section">
           <div className="history-header">
             <Utensils size={16} />
@@ -187,17 +164,14 @@ const CaloriasPage: React.FC = () => {
                     onCategoryChange={handleCategoryUpdate}
                     onRemoveFood={(foodId) => handleRemoveSubFood(item.id, foodId)}
                   />
-                  {/* Add Separator after every item, including the last one */}
                   <AddMealSeparator onClick={() => handleAddMealBlock(index)} />
                 </React.Fragment>
               ))
             )}
           </div>
         </section>
-
       </main>
 
-      {/* Popups */}
       <SearchPopup onAddFood={handleAddFoodFromSearch} />
       <SuggestionPopup onAddFood={handleAddFoodFromSearch} />
     </>

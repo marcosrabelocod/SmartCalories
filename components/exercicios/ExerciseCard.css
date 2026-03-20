@@ -1,16 +1,17 @@
 .exercise-card {
   background-color: var(--color-card);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.05);
   border-radius: 1rem;
   margin-bottom: 0.75rem;
   overflow: hidden;
   transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 .exercise-card.completed {
   opacity: 0.7;
-  border-color: rgba(255, 255, 255, 0.1);
-  background-color: rgba(0, 0, 0, 0.2);
+  border-color: rgba(0, 0, 0, 0.05);
+  background-color: rgba(0, 0, 0, 0.02);
 }
 
 .ec-header {
@@ -26,9 +27,9 @@
 }
 
 .ec-name {
-  font-size: 1.1rem;
+  font-size: 1.25rem;
   font-weight: 600;
-  color: white;
+  color: var(--text-main);
   margin-bottom: 0.25rem;
 }
 
@@ -39,10 +40,10 @@
 }
 
 .ec-badge {
-  font-size: 0.75rem;
-  color: #94a3b8;
-  background-color: rgba(255, 255, 255, 0.05);
-  padding: 0.1rem 0.5rem;
+  font-size: 0.9rem;
+  color: #64748b;
+  background-color: rgba(0, 0, 0, 0.05);
+  padding: 0.15rem 0.6rem;
   border-radius: 0.25rem;
 }
 
@@ -58,8 +59,8 @@
 
 .ec-details {
   padding: 0 1rem 1rem 1rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
-  background-color: rgba(0, 0, 0, 0.1);
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  background-color: rgba(0, 0, 0, 0.01);
 }
 
 .ec-info-grid {
@@ -73,28 +74,28 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  font-size: 0.85rem;
-  color: #cbd5e1;
+  font-size: 1rem;
+  color: #475569;
 }
 
 .ec-instructions {
   display: flex;
   gap: 0.5rem;
-  background-color: rgba(255, 255, 255, 0.03);
+  background-color: rgba(0, 0, 0, 0.02);
   padding: 0.75rem;
   border-radius: 0.5rem;
   margin-bottom: 1rem;
 }
 
 .ec-inst-icon {
-  color: #94a3b8;
+  color: #64748b;
   flex-shrink: 0;
   margin-top: 0.2rem;
 }
 
 .ec-instructions p {
-  font-size: 0.875rem;
-  color: #cbd5e1;
+  font-size: 1rem;
+  color: #475569;
   line-height: 1.4;
 }
 
@@ -117,10 +118,10 @@
   gap: 0.4rem;
   padding: 0.65rem;
   background-color: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  color: #94a3b8;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  color: #64748b;
   border-radius: 0.5rem;
-  font-size: 0.85rem;
+  font-size: 1rem;
   cursor: pointer;
   transition: all 0.2s;
 }
@@ -136,7 +137,7 @@
   border: 1px solid rgba(239, 68, 68, 0.3);
   color: #f87171;
   border-radius: 0.5rem;
-  font-size: 0.85rem;
+  font-size: 1rem;
   cursor: pointer;
   transition: all 0.2s;
 }
@@ -169,9 +170,9 @@
 /* Partial Range styles */
 .ec-partial-container {
     padding: 1rem;
-    background-color: rgba(255, 255, 255, 0.03);
+    background-color: rgba(0, 0, 0, 0.02);
     border-radius: 0.75rem;
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 .ec-partial-header {
@@ -179,7 +180,7 @@
     justify-content: space-between;
     margin-bottom: 0.75rem;
     font-size: 0.875rem;
-    color: #cbd5e1;
+    color: #475569;
 }
 
 .ec-partial-val {

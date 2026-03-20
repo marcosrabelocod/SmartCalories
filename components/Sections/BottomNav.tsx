@@ -1,5 +1,5 @@
 import React from 'react';
-import { Utensils, Dumbbell, ClipboardList, Archive } from 'lucide-react';
+import { Utensils, Dumbbell, ClipboardList, Archive, User } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import './BottomNav.css';
 
@@ -14,6 +14,7 @@ const BottomNav: React.FC = () => {
     { path: '/exercicios', label: 'Treino', icon: Dumbbell },
     { path: '/supermercado', label: 'Compras', icon: ClipboardList },
     { path: '/despensa', label: 'Despensa', icon: Archive },
+    { path: '/perfil', label: 'Perfil', icon: User },
   ];
 
   return (

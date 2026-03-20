@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Lightbulb, X, Loader2, Check, RefreshCw } from 'lucide-react';
 import { useSuggestion } from '../IaFunctions/SuggestionContext';
@@ -12,7 +13,7 @@ interface Props {
 const SuggestionPopup: React.FC<Props> = ({ onAddFood }) => {
   const { isOpen, closeSuggestion, activeMealId, activeMealType, remainingCalories } = useSuggestion();
   const { suggestFoodFromIngredients } = useGemini();
-  const [ingredients, setIngredients] = useState('');
+  const [preference, setPreference] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   
@@ -22,29 +23,33 @@ const SuggestionPopup: React.FC<Props> = ({ onAddFood }) => {
   if (!isOpen) return null;
 
   const handleClose = () => {
-    setIngredients('');
+    setPreference('');
     setSuggestedFood(null);
     setError(null);
     closeSuggestion();
   };
 
   const fetchSuggestion = async () => {
-    if (!ingredients.trim() || !activeMealId) return;
+    if (!activeMealId) return;
 
     setIsLoading(true);
     setError(null);
-    setSuggestedFood(null); // Clear previous suggestion while loading
+    setSuggestedFood(null); 
 
     try {
-      const result = await suggestFoodFromIngredients(ingredients, activeMealType, remainingCalories);
+      // Busca itens da despensa para o Chef IA
+      const pantrySaved = localStorage.getItem('smartcal_pantry');
+      const pantryItems = pantrySaved ? JSON.parse(pantrySaved) : [];
+
+      const result = await suggestFoodFromIngredients(preference, activeMealType, remainingCalories, pantryItems);
       
       if (result) {
         setSuggestedFood(result);
       } else {
-        setError("Não consegui sugerir algo. Tente ser mais específico.");
+        setError("Não consegui sugerir algo agora. Tente novamente.");
       }
     } catch (err) {
-      setError("Erro de conexão. Tente novamente.");
+      setError("Erro de conexão com a IA.");
     } finally {
       setIsLoading(false);
     }
@@ -71,7 +76,7 @@ const SuggestionPopup: React.FC<Props> = ({ onAddFood }) => {
         <div className="suggestion-header">
           <div className="suggestion-title-box">
             <Lightbulb size={18} className="text-warning-accent" fill="currentColor" />
-            <h3>Sugestão para {activeMealType}</h3>
+            <h3>Chef IA: {activeMealType}</h3>
           </div>
           <button onClick={handleClose} className="suggestion-close-btn">
             <X size={24} />
@@ -79,7 +84,6 @@ const SuggestionPopup: React.FC<Props> = ({ onAddFood }) => {
         </div>
 
         {suggestedFood && !isLoading ? (
-          // RESULT VIEW: Show suggestion and actions
           <div className="suggestion-result-container">
             <div className="suggestion-result-info">
               <h2 className="result-food-name">{suggestedFood.foodName}</h2>
@@ -104,18 +108,17 @@ const SuggestionPopup: React.FC<Props> = ({ onAddFood }) => {
               </button>
             </div>
             <p className="suggestion-hint">
-              Confirme para adicionar ou tente uma nova opção.
+              Sugestão baseada na sua despensa e saúde.
             </p>
           </div>
         ) : (
-          // FORM VIEW: Input ingredients
           <form onSubmit={handleSubmit} className="suggestion-form">
             <div className="suggestion-input-wrapper">
               <input
                 type="text"
-                value={ingredients}
-                onChange={(e) => setIngredients(e.target.value)}
-                placeholder="escreva os ingredientes que tem"
+                value={preference}
+                onChange={(e) => setPreference(e.target.value)}
+                placeholder="Alguma preferência? (Opcional)"
                 className="suggestion-input"
                 autoFocus
                 disabled={isLoading}
@@ -123,7 +126,7 @@ const SuggestionPopup: React.FC<Props> = ({ onAddFood }) => {
               <button 
                 type="submit" 
                 className="suggestion-submit-btn"
-                disabled={isLoading || !ingredients.trim()}
+                disabled={isLoading}
               >
                 {isLoading ? (
                   <Loader2 size={20} className="animate-spin" />
@@ -136,7 +139,7 @@ const SuggestionPopup: React.FC<Props> = ({ onAddFood }) => {
             
             {!error && (
               <p className="suggestion-hint">
-                A IA dará uma sugestão de acordo com seus ingredientes e meta calórica.
+                A IA analisará sua <b>despensa</b> e <b>saúde</b> para sugerir o prato ideal.
               </p>
             )}
           </form>
