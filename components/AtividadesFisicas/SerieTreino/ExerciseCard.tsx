@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Check, RefreshCw, ChevronDown, Info, Flame, Target, XCircle, CheckCircle2 } from 'lucide-react';
-import { ExerciseItem } from '../../types';
+import { ExerciseItem } from '../../../types';
 import './ExerciseCard.css';
 
 interface Props {

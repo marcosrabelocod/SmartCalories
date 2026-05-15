@@ -1,0 +1,135 @@
+.conquistas-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 1rem;
+  padding: 1rem 0;
+}
+
+.conquista-card {
+  background-color: #2d2c37;
+  border-radius: 1rem;
+  padding: 1.25rem 0.75rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  border: 1px solid #3f3e4a;
+  transition: all 0.3s ease;
+}
+
+.conquista-card.locked {
+  opacity: 0.6;
+  filter: grayscale(100%);
+}
+
+.conquista-card.unlocked {
+  border-color: #eab308;
+  box-shadow: 0 4px 12px rgba(234, 179, 8, 0.1);
+}
+
+.conquista-icon-container {
+  margin-bottom: 0.75rem;
+  padding: 0.75rem;
+  border-radius: 50%;
+  background-color: #1e1d24;
+}
+
+.conquista-card.unlocked .conquista-icon-container {
+  background-color: rgba(234, 179, 8, 0.1);
+}
+
+.conquista-title {
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.conquista-legend {
+  color: #9ca3af;
+  font-size: 0.75rem;
+  line-height: 1.3;
+}
+
+/* Global Popup Styles */
+.conquista-popup-overlay {
+  position: fixed;
+  bottom: 5rem;
+  left: 50%;
+  transform: translateX(-50%) !important; 
+  /* The !important forces the x translate even with motion */
+  z-index: 100;
+  width: 90%;
+  max-width: 320px;
+}
+
+.conquista-popup-content {
+  background: linear-gradient(135deg, #2d2c37 0%, #1e1d24 100%);
+  border: 1px solid #eab308;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  position: relative;
+  text-align: center;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4), 0 0 20px rgba(234, 179, 8, 0.2);
+}
+
+.close-popup-btn {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  background: none;
+  border: none;
+  color: #9ca3af;
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 50%;
+  transition: all 0.2s;
+}
+
+.close-popup-btn:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+.pulse-animation {
+  animation: pulse-glow 2s infinite;
+}
+
+@keyframes pulse-glow {
+  0% { text-shadow: 0 0 0 rgba(234, 179, 8, 0); transform: scale(1); }
+  50% { text-shadow: 0 0 15px rgba(234, 179, 8, 0.6); transform: scale(1.1); }
+  100% { text-shadow: 0 0 0 rgba(234, 179, 8, 0); transform: scale(1); }
+}
+
+.conquista-icon-wrapper {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: rgba(234, 179, 8, 0.15);
+  margin-bottom: 1rem;
+}
+
+.conquista-popup-title {
+  color: #eab308;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.conquista-popup-name {
+  color: #fff;
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.conquista-popup-desc {
+  color: #d1d5db;
+  font-size: 0.85rem;
+  line-height: 1.4;
+}

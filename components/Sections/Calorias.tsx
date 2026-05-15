@@ -33,7 +33,7 @@ const Calorias: React.FC<CaloriasProps> = ({ current, total }) => {
           </div>
         </div>
         <div className="cal-stats">
-          <span className={`cal-current ${calRemaining < 0 ? 'text-brand-danger' : 'text-white'}`}>
+          <span className={`cal-current ${calRemaining < 0 ? 'text-brand-danger' : 'text-brand-warning'}`}>
             {current}
           </span>
           <span className="cal-total"> / {total}</span>

@@ -6,6 +6,7 @@ import ComprasOnboarding from './ComprasOnboarding';
 import { ShoppingBasket, Wand2, PackagePlus } from 'lucide-react';
 import { useToast } from '../../IaFunctions/ToastContext';
 import { useGemini } from '../../services/geminiService';
+import { useConquistas } from '../../IaFunctions/ConquistasContext';
 import './Compras.css';
 
 export interface ShoppingItem {
@@ -19,6 +20,8 @@ export interface ShoppingItem {
 const ComprasPage: React.FC = () => {
   const { showToast } = useToast();
   const { generateShoppingList } = useGemini();
+  const { unlockConquista } = useConquistas();
+  
   const [items, setItems] = useState<ShoppingItem[]>(() => {
     const saved = localStorage.getItem('smartcal_shopping_list');
     return saved ? JSON.parse(saved) : [];
@@ -28,7 +31,11 @@ const ComprasPage: React.FC = () => {
 
   useEffect(() => {
     localStorage.setItem('smartcal_shopping_list', JSON.stringify(items));
-  }, [items]);
+    
+    if (items.length > 0 && items.every(i => i.checked)) {
+      unlockConquista('cesta_completa');
+    }
+  }, [items, unlockConquista]);
 
   const handleGenerateAIList = async (budget: number, duration: string, goal: string) => {
     const pantrySaved = localStorage.getItem('smartcal_pantry');

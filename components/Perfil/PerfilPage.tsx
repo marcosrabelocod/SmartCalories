@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useUser } from '../../IaFunctions/UserContext';
-import { User, Weight, Ruler, Calendar, Activity, Save, CheckCircle } from 'lucide-react';
+import { User, Weight, Ruler, Calendar, Activity, Save, CheckCircle, BarChart2, Award } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area } from 'recharts';
 import { motion } from 'motion/react';
+import ConquistasList from './Conquistas/ConquistasList';
 import './PerfilPage.css';
 
 // Mock data for charts (1 month)
@@ -20,7 +21,7 @@ const generateMockData = (baseValue: number, variance: number, days: number = 30
   return data;
 };
 
-// Helper to calculate age from birth date
+// ... existing code ...
 const calculateAge = (birthDateString: string) => {
   if (!birthDateString) return 0;
   const today = new Date();
@@ -35,6 +36,7 @@ const calculateAge = (birthDateString: string) => {
 
 const PerfilPage: React.FC = () => {
   const { userData, updateUserData } = useUser();
+  const [activeTab, setActiveTab] = useState<'graficos' | 'conquistas'>('graficos');
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
     peso: userData.atributos.Peso,
@@ -91,6 +93,23 @@ const PerfilPage: React.FC = () => {
           <span>Dados atualizados com sucesso!</span>
         </motion.div>
       )}
+
+      <div className="perfil-tabs">
+        <button 
+          className={`perfil-tab ${activeTab === 'graficos' ? 'active' : ''}`}
+          onClick={() => setActiveTab('graficos')}
+        >
+          <BarChart2 size={18} />
+          Gráficos
+        </button>
+        <button 
+          className={`perfil-tab ${activeTab === 'conquistas' ? 'active' : ''}`}
+          onClick={() => setActiveTab('conquistas')}
+        >
+          <Award size={18} />
+          Conquistas
+        </button>
+      </div>
 
       <main className="perfil-content">
         <section className="user-info-card">
@@ -193,58 +212,64 @@ const PerfilPage: React.FC = () => {
           </div>
         </section>
 
-        <section className="charts-section">
-          <div className="chart-card">
-            <h3 className="chart-title">Consumo de Calorias (30 dias)</h3>
-            <div className="chart-wrapper">
-              <ResponsiveContainer width="100%" height={200}>
-                <AreaChart data={consumptionData}>
-                  <defs>
-                    <linearGradient id="colorCons" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#10b981" stopOpacity={0.3}/>
-                      <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
-                    </linearGradient>
-                  </defs>
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e5e7eb" />
-                  <XAxis dataKey="date" tick={{fontSize: 10}} interval={6} />
-                  <YAxis tick={{fontSize: 10}} />
-                  <Tooltip />
-                  <Area type="monotone" dataKey="value" stroke="#10b981" fillOpacity={1} fill="url(#colorCons)" />
-                </AreaChart>
-              </ResponsiveContainer>
+        {activeTab === 'graficos' ? (
+          <section className="charts-section">
+            <div className="chart-card">
+              <h3 className="chart-title">Consumo de Calorias (30 dias)</h3>
+              <div className="chart-wrapper">
+                <ResponsiveContainer width="100%" height={200}>
+                  <AreaChart data={consumptionData}>
+                    <defs>
+                      <linearGradient id="colorCons" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="#10b981" stopOpacity={0.3}/>
+                        <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
+                      </linearGradient>
+                    </defs>
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e5e7eb" />
+                    <XAxis dataKey="date" tick={{fontSize: 10}} interval={6} />
+                    <YAxis tick={{fontSize: 10}} />
+                    <Tooltip />
+                    <Area type="monotone" dataKey="value" stroke="#10b981" fillOpacity={1} fill="url(#colorCons)" />
+                  </AreaChart>
+                </ResponsiveContainer>
+              </div>
             </div>
-          </div>
 
-          <div className="chart-card">
-            <h3 className="chart-title">Queima de Calorias (30 dias)</h3>
-            <div className="chart-wrapper">
-              <ResponsiveContainer width="100%" height={200}>
-                <LineChart data={burnData}>
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e5e7eb" />
-                  <XAxis dataKey="date" tick={{fontSize: 10}} interval={6} />
-                  <YAxis tick={{fontSize: 10}} />
-                  <Tooltip />
-                  <Line type="monotone" dataKey="value" stroke="#f59e0b" strokeWidth={2} dot={false} />
-                </LineChart>
-              </ResponsiveContainer>
+            <div className="chart-card">
+              <h3 className="chart-title">Queima de Calorias (30 dias)</h3>
+              <div className="chart-wrapper">
+                <ResponsiveContainer width="100%" height={200}>
+                  <LineChart data={burnData}>
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e5e7eb" />
+                    <XAxis dataKey="date" tick={{fontSize: 10}} interval={6} />
+                    <YAxis tick={{fontSize: 10}} />
+                    <Tooltip />
+                    <Line type="monotone" dataKey="value" stroke="#f59e0b" strokeWidth={2} dot={false} />
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
             </div>
-          </div>
 
-          <div className="chart-card">
-            <h3 className="chart-title">Evolução do Peso (30 dias)</h3>
-            <div className="chart-wrapper">
-              <ResponsiveContainer width="100%" height={200}>
-                <LineChart data={weightData}>
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e5e7eb" />
-                  <XAxis dataKey="date" tick={{fontSize: 10}} interval={6} />
-                  <YAxis domain={['dataMin - 2', 'dataMax + 2']} tick={{fontSize: 10}} />
-                  <Tooltip />
-                  <Line type="monotone" dataKey="value" stroke="#6366f1" strokeWidth={2} dot={{ r: 2 }} />
-                </LineChart>
-              </ResponsiveContainer>
+            <div className="chart-card">
+              <h3 className="chart-title">Evolução do Peso (30 dias)</h3>
+              <div className="chart-wrapper">
+                <ResponsiveContainer width="100%" height={200}>
+                  <LineChart data={weightData}>
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e5e7eb" />
+                    <XAxis dataKey="date" tick={{fontSize: 10}} interval={6} />
+                    <YAxis domain={['dataMin - 2', 'dataMax + 2']} tick={{fontSize: 10}} />
+                    <Tooltip />
+                    <Line type="monotone" dataKey="value" stroke="#6366f1" strokeWidth={2} dot={{ r: 2 }} />
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
             </div>
-          </div>
-        </section>
+          </section>
+        ) : (
+          <section className="conquistas-section">
+            <ConquistasList />
+          </section>
+        )}
       </main>
     </div>
   );

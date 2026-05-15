@@ -32,7 +32,7 @@
 .hydro-current {
   font-size: 1.25rem;
   font-weight: bold;
-  color: white;
+  color: var(--color-primary);
 }
 
 .hydro-total {

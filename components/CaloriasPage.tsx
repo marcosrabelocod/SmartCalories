@@ -1,10 +1,11 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import CalorieHeader from './CalorieHeader';
 import Refeicao from './Refeicao';
 import AddMealSeparator from './AddMealSeparator';
 import SearchPopup from './SearchPopup';
 import SuggestionPopup from './SuggestionPopup';
 import { useUser } from '../IaFunctions/UserContext';
+import { useConquistas } from '../IaFunctions/ConquistasContext';
 import { FoodItem } from '../types';
 import { Utensils } from 'lucide-react';
 import './CaloriasPage.css';
@@ -21,6 +22,7 @@ const createDate = (hours: number, minutes: number) => {
 const CaloriasPage: React.FC = () => {
   // Access User Context to update history
   const { addFoodToHistory } = useUser();
+  const { unlockConquista } = useConquistas();
 
   // State 1: Calories
   const [totalCalories] = useState<number>(INITIAL_CAL_TOTAL);
@@ -50,6 +52,16 @@ const CaloriasPage: React.FC = () => {
   // State 2: Water (Initialized to 0)
   const [waterTotal] = useState<number>(2000);
   const [waterCurrent, setWaterCurrent] = useState<number>(0);
+
+  useEffect(() => {
+    const hasBreakfast = foodHistory.some(m => m.category === 'Café da Manhã' && m.foods.length > 0);
+    const hasLunch = foodHistory.some(m => m.category === 'Almoço' && m.foods.length > 0);
+    const hasDinner = foodHistory.some(m => m.category === 'Jantar' && m.foods.length > 0);
+
+    if (hasBreakfast && hasLunch && hasDinner) {
+      unlockConquista('refeicoes_completas');
+    }
+  }, [foodHistory, unlockConquista]);
 
   // Derived state for total current calories
   const currentCalories = foodHistory.reduce((acc, meal) => {

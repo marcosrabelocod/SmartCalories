@@ -2,7 +2,7 @@ import React from 'react';
 import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
 import BottomNav from './components/Sections/BottomNav';
 import CaloriasPage from './components/CaloriasPage';
-import ExerciciosPage from './components/exercicios/ExerciciosPage';
+import AtividadesFisicasPage from './components/AtividadesFisicas/AtividadesFisicasPage';
 import ComprasPage from './components/Compras/ComprasPage';
 import DespensaPage from './components/despensa/DespensaPage';
 import PerfilPage from './components/Perfil/PerfilPage';
@@ -15,6 +15,8 @@ import { UserProvider, useUser } from './IaFunctions/UserContext';
 import { ExerciseProvider } from './IaFunctions/ExerciseContext';
 import { TokenProvider } from './IaFunctions/TokenContext';
 import { ToastProvider } from './IaFunctions/ToastContext';
+import { ConquistasProvider } from './IaFunctions/ConquistasContext';
+import ConquistaGlobalPopup from './components/Perfil/Conquistas/ConquistaGlobalPopup';
 import './App.css';
 
 const MainApp: React.FC = () => {
@@ -29,7 +31,7 @@ const MainApp: React.FC = () => {
       <div className="app-container">
         <Routes>
           <Route path="/" element={<CaloriasPage />} />
-          <Route path="/exercicios" element={<ExerciciosPage />} />
+          <Route path="/exercicios" element={<AtividadesFisicasPage />} />
           <Route path="/supermercado" element={<ComprasPage />} />
           <Route path="/despensa" element={<DespensaPage />} />
           <Route path="/perfil" element={<PerfilPage />} />
@@ -38,6 +40,7 @@ const MainApp: React.FC = () => {
         <BottomNav />
         <TokenCounter />
         <UndoToast />
+        <ConquistaGlobalPopup />
       </div>
     </HashRouter>
   );
@@ -48,13 +51,15 @@ const App: React.FC = () => {
     <TokenProvider>
       <UserProvider>
         <ExerciseProvider>
-          <ToastProvider>
-            <SearchProvider>
-              <SuggestionProvider>
-                <MainApp />
-              </SuggestionProvider>
-            </SearchProvider>
-          </ToastProvider>
+          <ConquistasProvider>
+            <ToastProvider>
+              <SearchProvider>
+                <SuggestionProvider>
+                  <MainApp />
+                </SuggestionProvider>
+              </SearchProvider>
+            </ToastProvider>
+          </ConquistasProvider>
         </ExerciseProvider>
       </UserProvider>
     </TokenProvider>

@@ -81,7 +81,8 @@ export const useGemini = () => {
         1. PRIORIDADE: Se a compra for para uma refeição específica, escolha uma receita que utilize o máximo de itens já presentes na DESPENSA para economizar o orçamento.
         2. RESTRIÇÕES: Não inclua itens que agravem as comorbidades do usuário (ex: se tiver intolerância a lactose, sugira alternativas sem lactose).
         3. FOCO: Mantenha a dieta alinhada ao objetivo de ${goal}.
-        4. OBTENÇÃO: Liste apenas o que precisa ser COMPRADO para completar o plano, não liste o que já está na despensa.
+        4. REGIONALIDADE: Dê prioridade a itens da culinária regional do Norte do Brasil em suas sugestões de refeições futuras (ex: jambu, castanha do pará, pescada, açaí puro).
+        5. OBTENÇÃO: Liste apenas o que precisa ser COMPRADO para completar o plano, não liste o que já está na despensa.
         
         Retorne um array JSON.`,
         config: {
@@ -115,23 +116,30 @@ export const useGemini = () => {
       const userContextString = JSON.stringify(userData.atributos);
       const comorbidades = userData.saude.comorbidades.join(", ") || "Nenhuma";
       
-      const prompt = `Você é um Chef Nutricionista IA. Sugira um prato para o ${mealType}.
+      const prompt = `Você é um Chef Nutricionista IA. Sugira um prato ideal para a refeição: ${mealType}.
       
       DADOS DO USUÁRIO:
       - Perfil Físico: ${userContextString}
       - Comorbidades/Alergias: ${comorbidades}
       
       CONTEXTO DA REFEIÇÃO:
+      - Tipo de Refeição: ${mealType}
       - Itens na Despensa: ${pantryString || "Nenhum item registrado"}
-      - Calorias Restantes na Meta: ${remainingCalories} kcal
-      - Preferência do Usuário: ${preference || "Nenhuma (escolha o melhor com base na despensa)"}
+      - Preferência do Usuário: ${preference || "Nenhuma"}
       
-      REGRAS:
-      1. Priorize usar ingredientes que o usuário já tem na despensa.
-      2. NUNCA sugira algo que contenha ingredientes das comorbidades citadas.
-      3. Tente se aproximar das calorias restantes, considerando o perfil físico (idade, gênero, peso, altura).
+      REGRAS CRÍTICAS DE CALORIAS E COMPOSIÇÃO:
+      1. NÃO tente suprir todas as calorias restantes em uma única refeição. Mire nestes alvos aproximados:
+         - Café da manhã: ~450 kcal
+         - Almoço: ~550 kcal
+         - Jantar: ~500 kcal
+         - Lanches: ~200 kcal
+      2. No almoço ou jantar, sugira no máximo 3 acompanhamentos (ex: arroz, feijão, salada).
+      3. TOQUE REGIONAL (NORTE DO BRASIL): Inclua pratos como frango com jambu, pescada cozida com legumes, e priorize castanha-do-pará.
+      4. SOBRE O AÇAÍ: O açaí do norte tem opções de farinha de mandioca ou farinha de tapioca, com ou sem açúcar. Pode vir como acompanhamento (com peixe frito, camarão, etc.) ou sobremesa/lanche. Inclua onde fizer sentido!
+      5. Priorize usar ingredientes que o usuário já tem na despensa.
+      6. NUNCA sugira algo que contenha ingredientes das comorbidades citadas.
       
-      Retorne JSON com foodName e calories.`;
+      Retorne JSON com foodName (nome completo do prato) e calories.`;
 
       const response = await ai.models.generateContent({
         model: "gemini-3-flash-preview",
@@ -153,11 +161,15 @@ export const useGemini = () => {
     } catch (error) { return null; }
   };
 
-  const generateWorkoutPlan = async (goal: string, focus: string): Promise<ExerciseItem[]> => {
+  const generateWorkoutPlan = async (goal: string, focus: string, workoutType: string = 'academia'): Promise<ExerciseItem[]> => {
     try {
       const userContextString = JSON.stringify(userData.atributos);
       const comorbidades = userData.saude.comorbidades.join(", ") || "Nenhuma";
       
+      const typeConstraint = workoutType === 'calistenia' 
+        ? "O treino DEVE ser EXCLUSIVAMENTE calistenia, sem uso de nenhum equipamento de academia ou pesos livres (apenas o peso do corpo e barras/paralelas se necessário)."
+        : "O treino DEVE utilizar equipamentos de academia e pesos livres.";
+
       const response = await ai.models.generateContent({
         model: "gemini-3-pro-preview",
         contents: `Como um Personal Trainer IA, crie um plano de treino personalizado.
@@ -169,9 +181,11 @@ export const useGemini = () => {
         OBJETIVOS:
         - Objetivo Geral: ${goal}
         - Foco do Treino: ${focus}
+        - Estilo de Treino: ${workoutType}
         
         INSTRUÇÕES:
-        Crie um plano de exercícios seguro e eficaz considerando a idade, gênero e peso do usuário.`,
+        Crie um plano de exercícios seguro e eficaz considerando a idade, gênero e peso do usuário.
+        ${typeConstraint}`,
         config: {
           responseMimeType: "application/json",
           responseSchema: {
@@ -197,10 +211,14 @@ export const useGemini = () => {
     } catch (error) { return []; }
   };
 
-  const suggestReplacementExercise = async (currentExerciseName: string, goal: string, focus: string): Promise<ExerciseItem | null> => {
+  const suggestReplacementExercise = async (currentExerciseName: string, goal: string, focus: string, workoutType: string = 'academia'): Promise<ExerciseItem | null> => {
     try {
       const userContextString = JSON.stringify(userData.atributos);
       const comorbidades = userData.saude.comorbidades.join(", ") || "Nenhuma";
+
+      const typeConstraint = workoutType === 'calistenia' 
+        ? "O treino DEVE ser EXCLUSIVAMENTE calistenia, sem uso de nenhum equipamento de academia ou pesos livres (apenas o peso do corpo e barras/paralelas se necessário)."
+        : "O treino DEVE utilizar equipamentos de academia e pesos livres.";
 
       const response = await ai.models.generateContent({
         model: "gemini-3-pro-preview",
@@ -213,9 +231,11 @@ export const useGemini = () => {
         OBJETIVOS:
         - Objetivo Geral: ${goal}
         - Foco do Treino: ${focus}
+        - Estilo de Treino: ${workoutType}
         
         INSTRUÇÕES:
-        O substituto deve ser adequado para a idade, gênero e peso do usuário, mantendo o foco em ${focus}.`,
+        O substituto deve ser adequado para a idade, gênero e peso do usuário, mantendo o foco em ${focus}.
+        ${typeConstraint}`,
         config: {
           responseMimeType: "application/json",
           responseSchema: {

@@ -70,4 +70,4 @@
 .bg-brand-warning { background-color: var(--color-warning); }
 .bg-brand-danger { background-color: var(--color-danger); }
 .text-brand-danger { color: var(--color-danger); }
-.text-white { color: white; }
+.text-brand-warning { color: var(--color-warning); }
