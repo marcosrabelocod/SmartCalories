@@ -5,16 +5,32 @@ type UserData = typeof initialData & {
   atributos: {
     genero: string;
     dataNascimento: string;
+    cidade: string;
   };
   saude: {
     comorbidades: string[];
-  }
+    consumos: string[];
+    medicamentos: string[];
+  };
+  financeiro: {
+    gastoAlimentacao: string;
+  };
 };
 
 interface UserContextType {
   userData: UserData;
   isSetupComplete: boolean;
-  setPhysicalData: (peso: string, altura: string, genero: string, dataNascimento: string, comorbidades: string[]) => void;
+  setPhysicalData: (
+    peso: string, 
+    altura: string, 
+    genero: string, 
+    dataNascimento: string, 
+    cidade: string,
+    comorbidades: string[],
+    consumos: string[],
+    medicamentos: string[],
+    gastoAlimentacao: string
+  ) => void;
   updateUserData: (newData: Partial<UserData>) => void;
   resetUserSetup: () => void;
   addFoodToHistory: (foodName: string, uiCategory: string) => void;
@@ -36,12 +52,30 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     atributos: {
       ...initialData.atributos,
       genero: '',
-      dataNascimento: ''
+      dataNascimento: '',
+      cidade: ''
     },
-    saude: { comorbidades: [] }
+    saude: { 
+      comorbidades: [],
+      consumos: [],
+      medicamentos: []
+    },
+    financeiro: {
+      gastoAlimentacao: ''
+    }
   });
 
-  const setPhysicalData = (peso: string, altura: string, genero: string, dataNascimento: string, comorbidades: string[]) => {
+  const setPhysicalData = (
+    peso: string, 
+    altura: string, 
+    genero: string, 
+    dataNascimento: string, 
+    cidade: string,
+    comorbidades: string[],
+    consumos: string[],
+    medicamentos: string[],
+    gastoAlimentacao: string
+  ) => {
     setUserData(prev => ({
       ...prev,
       atributos: {
@@ -49,10 +83,16 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         Peso: peso,
         Altura: altura,
         genero: genero,
-        dataNascimento: dataNascimento
+        dataNascimento: dataNascimento,
+        cidade: cidade
       },
       saude: {
-        comorbidades: comorbidades
+        comorbidades: comorbidades,
+        consumos: consumos,
+        medicamentos: medicamentos
+      },
+      financeiro: {
+        gastoAlimentacao: gastoAlimentacao
       }
     }));
     setIsSetupComplete(true);
